@@ -27,7 +27,7 @@ jobs:
       # Instalar dependencias (si usas Composer)
       - name: Install dependencies
         run: |
-          cd project # Cambiar a la carpeta del proyecto
+          cd project  # Cambiar a la carpeta del proyecto
           composer install
 
       # Ejecutar el análisis de SonarCloud utilizando el archivo 'sonar-project.properties'
@@ -37,3 +37,9 @@ jobs:
           projectBaseDir: project  # Ruta al directorio base donde está el archivo 'sonar-project.properties'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Usa el token almacenado en los secretos
+
+      # Subir el reporte SARIF a GitHub (si es necesario)
+      - name: Upload SARIF report to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: project/informes/sonarqube/sonar-report.sarif  # Ruta del archivo SARIF generado
