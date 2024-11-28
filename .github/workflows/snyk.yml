@@ -18,26 +18,49 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Paso 2: Instalar Snyk CLI
-      - name: Install Snyk CLI
-        run: npm install -g snyk
+      # Paso 2: Instalar Node.js, Snyk CLI y Snyk-to-HTML
+      - name: Install Dependencies
+        run: |
+          npm install -g snyk snyk-to-html
 
-      # Paso 3: Autenticarse en Snyk (es necesario configurar el token de Snyk como un secreto)
+      # Paso 3: Autenticarse en Snyk
       - name: Authenticate with Snyk
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}  # Usa el token de Snyk almacenado en secretos
         run: snyk auth $SNYK_TOKEN
 
-      # Paso 4: Ejecutar el análisis de Snyk y exportar los resultados en formato SARIF
-      - name: Run Snyk Test and Export SARIF
-        run: snyk test --all-projects --sarif-file=report.sarif  # Genera el archivo SARIF en la raíz
+      # Paso 4: Instalar dependencias PHP (composer)
+      - name: Install PHP Dependencies
+        run: |
+          cd mi-proyecto-php
+          composer install
 
-      # Paso 5: Verificar que el archivo SARIF fue generado en la raíz
-      - name: List files in the root directory
-        run: ls -alh  # Verifica si 'report.sarif' está presente en la raíz
+      # Paso 5: Ejecutar el análisis de Snyk para detectar vulnerabilidades en las dependencias
+      - name: Run Snyk Test (JSON Report)
+        run: |
+          cd mi-proyecto-php
+          snyk test --file=composer.lock --json > code-test-results.json
 
-      # Paso 6: Subir el archivo SARIF a GitHub Code Scanning
+      # Paso 6: Convertir el reporte JSON en HTML
+      - name: Convert JSON to HTML Report
+        run: |
+          snyk-to-html -i code-test-results.json -o snyk-report.html
+
+      # Paso 7: Registrar el proyecto para monitoreo continuo en Snyk
+      - name: Monitor Project with Snyk
+        run: |
+          cd mi-proyecto-php
+          snyk monitor --file=composer.lock
+
+      # Paso 8: Subir el reporte SARIF generado a GitHub Code Scanning
       - name: Upload SARIF result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: report.sarif  # Ruta del archivo SARIF en la raíz del proyecto
+          sarif_file: snyk-report.sarif  # Ruta del archivo SARIF (puedes ajustarlo a tu necesidad)
+
+      # Paso 9: Subir el reporte HTML generado como artefacto
+      - name: Upload HTML Report as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: snyk-report
+          path: snyk-report.html
