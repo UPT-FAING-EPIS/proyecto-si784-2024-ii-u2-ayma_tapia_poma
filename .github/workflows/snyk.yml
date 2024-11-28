@@ -28,20 +28,16 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: snyk auth $SNYK_TOKEN
 
-      # Paso 4: Cambiar al directorio correcto (si es necesario)
-      - name: Change to the correct directory
-        run: cd project  # O si está en otra subcarpeta, ajusta esta ruta
-
-      # Paso 5: Ejecutar el análisis de Snyk y exportar los resultados en formato SARIF
+      # Paso 4: Ejecutar el análisis de Snyk y exportar los resultados en formato SARIF
       - name: Run Snyk Test and Export SARIF
-        run: snyk test --all-projects --sarif-file=project/informes/snyk/report.sarif  # Ajusta la ruta si es necesario
+        run: snyk test --all-projects --sarif-file=report.sarif  # Genera el archivo SARIF en la raíz
 
-      # Paso 6: Verificar si el archivo SARIF se generó correctamente
-      - name: List files in 'project/informes/snyk'
-        run: ls -alh project/informes/snyk  # Verifica si 'report.sarif' está presente
+      # Paso 5: Verificar que el archivo SARIF fue generado en la raíz
+      - name: List files in the root directory
+        run: ls -alh  # Verifica si 'report.sarif' está presente en la raíz
 
-      # Paso 7: Subir el archivo SARIF a GitHub Code Scanning
+      # Paso 6: Subir el archivo SARIF a GitHub Code Scanning
       - name: Upload SARIF result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: project/informes/snyk/report.sarif  # Ruta correcta donde se genera el archivo SARIF
+          sarif_file: report.sarif  # Ruta del archivo SARIF en la raíz del proyecto
