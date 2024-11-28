@@ -30,14 +30,18 @@ jobs:
 
       # Paso 4: Ejecutar el análisis de Snyk para detectar vulnerabilidades en las dependencias dentro de la carpeta 'project'
       - name: Run Snyk Test
-        run: snyk test ./project  # Especifica la ruta correcta
+        run: snyk test ./project  # Especifica la ruta correcta del proyecto
 
       # Paso 5: Exportar los resultados de Snyk en formato SARIF en la carpeta 'informes/snyk'
       - name: Export Snyk Results in SARIF format
-        run: snyk test --all-projects --sarif-file=informes/snyk/report.sarif  # Ruta de exportación
+        run: snyk test --all-projects --sarif-file=project/informes/snyk/report.sarif  # Especifica la ruta de exportación correcta
 
-      # Paso 6: Subir el archivo SARIF a GitHub Code Scanning
+      # Paso 6: Verificar que el archivo SARIF fue generado
+      - name: List files in 'project/informes/snyk'
+        run: ls -alh project/informes/snyk  # Verificar si 'report.sarif' está presente
+
+      # Paso 7: Subir el archivo SARIF a GitHub Code Scanning
       - name: Upload SARIF result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: informes/snyk/report.sarif  # Ruta correcta donde se genera el archivo
+          sarif_file: project/informes/snyk/report.sarif  # Ruta correcta donde se genera el archivo SARIF
