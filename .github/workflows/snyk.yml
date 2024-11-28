@@ -32,7 +32,12 @@ jobs:
       - name: Run Snyk Test
         run: snyk test ./project  # Especifica la ruta correcta
 
+      # Paso 5: Exportar los resultados de Snyk en formato SARIF
+      - name: Export Snyk Results in SARIF format
+        run: snyk test --all-projects --sarif-file=report.sarif  # Exporta el resultado a 'report.sarif'
 
-      # Paso 6: Subir los resultados de Snyk a tu cuenta en Snyk (opcional)
-      - name: Upload Snyk Results
-        run: snyk monitor ./project  # Especifica la ruta correcta
+      # Paso 6: Subir el archivo SARIF a GitHub Code Scanning
+      - name: Upload SARIF result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: report.sarif  # Subir el archivo SARIF generado
