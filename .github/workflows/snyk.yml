@@ -34,7 +34,7 @@ jobs:
 
       # Paso 5: Exportar los resultados de Snyk en formato SARIF en la carpeta 'informes/snyk'
       - name: Export Snyk Results in SARIF format
-        run: snyk test --all-projects --sarif-file=project/informes/snyk/report.sarif  # Especifica la ruta de exportación correcta
+        run: snyk test --all-projects --sarif-file=project/informes/snyk/resultados.sarif  # Especifica la ruta de exportación correcta
 
       # Paso 6: Verificar que el archivo SARIF fue generado
       - name: List files in 'project/informes/snyk'
