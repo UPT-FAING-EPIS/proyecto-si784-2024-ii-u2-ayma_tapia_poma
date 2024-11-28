@@ -27,11 +27,12 @@ jobs:
       # Instalar dependencias (si usas Composer)
       - name: Install dependencies
         run: |
+          cd project # Aquí vas a la carpeta donde está tu proyecto
           composer install
 
       # Configurar SonarQube
       - name: Set up SonarQube
-        uses: SonarSource/sonarcloud-github-action@v2.0
+        uses: SonarSource/sonarcloud-github-action@v2
         with:
           sonar-project-key: 'erickorganizacion_proyectodolist'   # Clave de tu proyecto
           sonar-project-name: 'My PHP Project'
@@ -41,6 +42,7 @@ jobs:
       # Ejecutar el análisis de SonarQube
       - name: Run SonarQube Analysis
         run: |
+          cd project  # Asegúrate de estar en la carpeta de tu proyecto
           ./vendor/bin/sonar-scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Usa el token almacenado en los secretos
