@@ -45,18 +45,37 @@ jobs:
       run: |
         prospector-html --input semgrep.json --output semgrep-report.html --filter semgrep || true  # Convertir el JSON a HTML
 
-    # Paso 8: Mover el reporte HTML a la carpeta 'informes/segrem'
-    - name: Move report to Reportes folder
+    # Paso 8: Mover el reporte HTML de Semgrep a la carpeta 'informes/segrem'
+    - name: Move Semgrep report to Reportes folder
       run: |
         mkdir -p project/informes/segrem  # Crear la carpeta si no existe
         mv semgrep-report.html project/informes/segrem/  # Mover el reporte HTML a la carpeta
 
-    # Paso 9: Subir los reportes (SARIF y HTML) al repositorio
-    - name: Commit and push SARIF and HTML reports to GitHub
+    # Paso 9: Subir los reportes HTML a la rama gh-pages
+    - name: Commit and push HTML reports to gh-pages
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
-        git add project/informes/segrem/reporte.sarif  # Añadir el archivo SARIF generado
-        git add project/informes/segrem/semgrep-report.html  # Añadir el archivo HTML generado
-        git commit -m "Add Semgrep reports (SARIF and HTML)"  # Realizar el commit
-        git push  # Realizar el push de los reportes al repositorio
+        
+        # Crear un directorio para los reportes en gh-pages si no existe
+        mkdir -p ./project/informes/segrem
+        mkdir -p ./project/coverage-report
+        mkdir -p ./project/informes/mutacion
+        
+        # Copiar los reportes a ese directorio
+        cp project/informes/segrem/semgrep-report.html ./project/informes/segrem/
+        cp project/coverage-report/index.html ./project/coverage-report/
+        cp project/informes/mutacion/infection-report.html ./project/informes/mutacion/
+
+        # Configurar la rama gh-pages
+        git fetch origin gh-pages:gh-pages
+        git checkout gh-pages
+        
+        # Añadir y hacer commit de los cambios
+        git add ./project/informes/segrem/semgrep-report.html
+        git add ./project/coverage-report/index.html
+        git add ./project/informes/mutacion/infection-report.html
+        git commit -m "Add coverage and infection HTML reports to gh-pages"
+        
+        # Subir los cambios a la rama gh-pages
+        git push origin gh-pages
