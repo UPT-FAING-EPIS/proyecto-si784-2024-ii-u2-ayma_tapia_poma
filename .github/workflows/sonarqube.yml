@@ -20,11 +20,11 @@ jobs:
       with:
         sonar-token: ${{ secrets.SONAR_TOKEN }}
 
-    # Paso 3: Ejecutar el análisis de SonarCloud y generar el reporte SARIF
+    # Paso 3: Ejecutar el análisis de SonarCloud utilizando el archivo sonar-project.properties
     - name: Run SonarCloud Analysis
       run: |
-        # Ejecutar análisis de SonarCloud con salida SARIF
-        mvn clean verify sonar:sonar -Dsonar.projectKey=erickorganizacion_do-list \
+        # Ejecutar el análisis de SonarCloud con la configuración proporcionada en sonar-project.properties
+        sonar-scanner -Dsonar.projectKey=erickorganizacion_do-list \
           -Dsonar.organization=erickorganizacion \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
