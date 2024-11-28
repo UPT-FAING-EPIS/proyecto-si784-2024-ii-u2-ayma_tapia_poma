@@ -27,7 +27,7 @@ jobs:
         mvn clean verify sonar:sonar -Dsonar.projectKey=erickorganizacion_do-list \
           -Dsonar.organization=erickorganizacion \
           -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.login=785e43de9ae31633a9e236036130a25b3a33d6a3  # El token directamente en el archivo
 
     # Paso 4: Subir el archivo SARIF a GitHub Code Scanning
     - name: Upload SARIF result to GitHub Code Scanning
