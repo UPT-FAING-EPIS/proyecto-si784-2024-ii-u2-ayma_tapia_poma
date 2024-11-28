@@ -18,7 +18,7 @@ jobs:
     - name: Set up SonarCloud
       uses: SonarSource/sonarcloud-github-action@v2
       with:
-        token: ${{ secrets.SONAR_TOKEN }}  # Correcto: usar 'token' en lugar de 'sonar-token'
+        entryPoint: /usr/bin/mvn  # Especifica el punto de entrada para la acción
 
     # Paso 3: Ejecutar el análisis de SonarCloud y generar el reporte SARIF
     - name: Run SonarCloud Analysis
