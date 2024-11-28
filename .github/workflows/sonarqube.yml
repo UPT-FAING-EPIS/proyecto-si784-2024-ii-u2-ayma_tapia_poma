@@ -18,13 +18,13 @@ jobs:
     - name: Set up SonarCloud
       uses: SonarSource/sonarcloud-github-action@v2
       with:
-        sonar-token: ${{ secrets.SONAR_TOKEN }}
+        token: ${{ secrets.SONAR_TOKEN }}  # Correcto: usar 'token' en lugar de 'sonar-token'
 
-    # Paso 3: Ejecutar el análisis de SonarCloud utilizando el archivo sonar-project.properties
+    # Paso 3: Ejecutar el análisis de SonarCloud y generar el reporte SARIF
     - name: Run SonarCloud Analysis
       run: |
-        # Ejecutar el análisis de SonarCloud con la configuración proporcionada en sonar-project.properties
-        sonar-scanner -Dsonar.projectKey=erickorganizacion_do-list \
+        mvn clean install  # Compilar el proyecto (si es necesario)
+        mvn clean verify sonar:sonar -Dsonar.projectKey=erickorganizacion_do-list \
           -Dsonar.organization=erickorganizacion \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
