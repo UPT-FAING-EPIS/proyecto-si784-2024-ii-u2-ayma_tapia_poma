@@ -30,6 +30,7 @@ jobs:
           cd project  # Cambiar a la carpeta del proyecto
           composer install
 
+
       # Ejecutar el análisis de SonarCloud utilizando el archivo 'sonar-project.properties'
       - name: Run SonarCloud Analysis
         uses: SonarSource/sonarcloud-github-action@v2
