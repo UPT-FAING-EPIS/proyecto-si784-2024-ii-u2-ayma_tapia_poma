@@ -37,9 +37,3 @@ jobs:
           projectBaseDir: project  # Ruta al directorio base donde está el archivo 'sonar-project.properties'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Usa el token almacenado en los secretos
-
-      # Subir el reporte SARIF a GitHub con la versión correcta del action
-      - name: Upload SARIF report to GitHub
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: project/informes/sonarqube/sonar-report.sarif  # Ruta del archivo SARIF generado
