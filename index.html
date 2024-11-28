@@ -35,6 +35,18 @@
             text-align: left;
             padding-left: 20px;
         }
+        .button-container a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .button-container a:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
@@ -50,7 +62,7 @@
 
         <h2>Descripción del Proyecto</h2>
         <p>
-
+            <!-- Agregar una breve descripción de tu proyecto aquí -->
         </p>
 
         <h2>💻 Tecnologías Utilizadas</h2>
@@ -66,9 +78,11 @@
         <ul>
           <h1>Índice de Reportes</h1>
           <div class="button-container">
-            <a href="" class="button">Snyk</a>
-            <a href="" class="button">Sonar</a>
-            <a href="semgrep-report.html" class="button">Semgrep</a>
+            <a href="snyk-report.html" class="button">Snyk</a>
+            <a href="sonar-report.html" class="button">Sonar</a>
+            <a href="project/informes/segrem/semgrep-report.html" class="button">Semgrep</a> <!-- Ruta del reporte Semgrep -->
+            <a href="project/coverage-report/index.html" class="button">Coverage Report</a> <!-- Ruta del reporte de cobertura -->
+            <a href="project/informes/mutacion/infection-report.html" class="button">Infection Report</a> <!-- Ruta del reporte de infección -->
           </div>
         </ul>
     </div>
