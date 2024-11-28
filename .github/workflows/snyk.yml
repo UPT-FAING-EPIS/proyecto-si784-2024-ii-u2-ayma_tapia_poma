@@ -1,1 +1,41 @@
-a
+name: Snyk Security Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  snyk:
+    name: Snyk Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      # Paso 1: Hacer checkout del código
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Paso 2: Instalar Snyk CLI
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      # Paso 3: Autenticarse en Snyk (es necesario configurar el token de Snyk como un secreto)
+      - name: Authenticate with Snyk
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: snyk auth $SNYK_TOKEN
+
+      # Paso 4: Ejecutar el análisis de Snyk para detectar vulnerabilidades en las dependencias
+      - name: Run Snyk Test
+        run: snyk test
+
+      # Paso 5: Opcional: Ejecutar el análisis de Snyk para generar un reporte de infraestructura como código (si aplica)
+      - name: Run Snyk Infrastructure as Code Test (si aplica)
+        run: snyk iac test
+
+      # Paso 6: Subir los resultados de Snyk a tu cuenta en Snyk (opcional)
+      - name: Upload Snyk Results
+        run: snyk monitor
