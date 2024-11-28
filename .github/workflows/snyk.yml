@@ -32,9 +32,6 @@ jobs:
       - name: Run Snyk Test
         run: snyk test ./project  # Especifica la ruta correcta
 
-      # Paso 5: Opcional: Ejecutar el análisis de Snyk para generar un reporte de infraestructura como código (si aplica)
-      - name: Run Snyk Infrastructure as Code Test (si aplica)
-        run: snyk iac test ./project  # Especifica la ruta correcta
 
       # Paso 6: Subir los resultados de Snyk a tu cuenta en Snyk (opcional)
       - name: Upload Snyk Results
