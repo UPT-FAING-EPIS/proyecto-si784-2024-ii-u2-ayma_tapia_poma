@@ -30,7 +30,7 @@ jobs:
       - name: Upload SARIF to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: './informes/sonarqube/sonar-report.sarif'  # Ruta del archivo SARIF generado por SonarCloud
+          sarif_file: './project/informes/sonarqube/sonar-report.sarif'  # Ruta corregida al archivo SARIF
 
       # Paso 4: Configurar Git para GitHub Pages
       - name: Configure Git for GitHub Pages
@@ -43,7 +43,7 @@ jobs:
         run: |
           git fetch origin gh-pages  # Fetch de la rama gh-pages
           git checkout gh-pages || git checkout --orphan gh-pages  # Si no existe, crea una nueva rama
-          cp ./informes/sonarqube/sonar-report.sarif sonar-report.sarif  # Copiar el reporte SARIF
+          cp ./project/informes/sonarqube/sonar-report.sarif sonar-report.sarif  # Copiar el reporte SARIF
           git add sonar-report.sarif  # Añadir el archivo SARIF a la rama gh-pages
           git commit -m "Publishing SonarCloud SARIF report" || echo "No changes to commit"  # Si no hay cambios, no hacer commit
           git push origin gh-pages  # Subir los cambios a la rama gh-pages
