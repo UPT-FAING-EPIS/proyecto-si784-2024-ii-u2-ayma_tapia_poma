@@ -32,13 +32,13 @@ jobs:
       # Paso 4: Instalar dependencias PHP (composer)
       - name: Install PHP Dependencies
         run: |
-          cd mi-proyecto-php
+          cd project
           composer install
 
       # Paso 5: Ejecutar el análisis de Snyk para detectar vulnerabilidades en las dependencias
       - name: Run Snyk Test (JSON Report)
         run: |
-          cd mi-proyecto-php
+          cd project
           snyk test --file=composer.lock --json > code-test-results.json
 
       # Paso 6: Convertir el reporte JSON en HTML
@@ -49,7 +49,7 @@ jobs:
       # Paso 7: Registrar el proyecto para monitoreo continuo en Snyk
       - name: Monitor Project with Snyk
         run: |
-          cd mi-proyecto-php
+          cd project
           snyk monitor --file=composer.lock
 
       # Paso 8: Subir el reporte SARIF generado a GitHub Code Scanning
