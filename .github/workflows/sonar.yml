@@ -26,12 +26,6 @@ jobs:
         with:
           projectBaseDir: './project'  # Indicar la ruta de la carpeta donde está el archivo sonar-project.properties
 
-      # Paso 3: Subir el archivo SARIF a GitHub Code Scanning
-      - name: Upload SARIF to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: './project/informes/sonarqube/sonar-report.sarif'  # Ruta al archivo SARIF
-
       # Paso 4: Configurar Git para GitHub Pages
       - name: Configure Git for GitHub Pages
         run: |
