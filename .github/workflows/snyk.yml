@@ -28,17 +28,17 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: snyk auth $SNYK_TOKEN
 
-      # Paso 4: Ejecutar el análisis de Snyk para detectar vulnerabilidades en las dependencias dentro de la carpeta 'project'
-      - name: Run Snyk Test
-        run: snyk test ./project  # Especifica la ruta correcta del proyecto
+      # Paso 4: Cambiar al directorio correcto (si es necesario)
+      - name: Change to the correct directory
+        run: cd project  # O si está en otra subcarpeta, ajusta esta ruta
 
-      # Paso 5: Exportar los resultados de Snyk en formato SARIF en la carpeta 'informes/snyk'
-      - name: Export Snyk Results in SARIF format
-        run: snyk test --all-projects --sarif-file=project/informes/snyk/report.sarif  # Especifica la ruta de exportación correcta
+      # Paso 5: Ejecutar el análisis de Snyk y exportar los resultados en formato SARIF
+      - name: Run Snyk Test and Export SARIF
+        run: snyk test --all-projects --sarif-file=project/informes/snyk/report.sarif  # Ajusta la ruta si es necesario
 
-      # Paso 6: Verificar que el archivo SARIF fue generado
+      # Paso 6: Verificar si el archivo SARIF se generó correctamente
       - name: List files in 'project/informes/snyk'
-        run: ls -alh project/informes/snyk  # Verificar si 'report.sarif' está presente
+        run: ls -alh project/informes/snyk  # Verifica si 'report.sarif' está presente
 
       # Paso 7: Subir el archivo SARIF a GitHub Code Scanning
       - name: Upload SARIF result to GitHub Code Scanning
