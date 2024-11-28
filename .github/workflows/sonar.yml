@@ -26,11 +26,6 @@ jobs:
         with:
           projectBaseDir: './project'  # Indicar la ruta de la carpeta donde está el archivo sonar-project.properties
 
-      # Paso 4: Configurar Git para GitHub Pages
-      - name: Configure Git for GitHub Pages
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
 
       # Paso 5: Publicar el reporte SARIF en la rama gh-pages
       - name: Publish SARIF report to GitHub Pages
