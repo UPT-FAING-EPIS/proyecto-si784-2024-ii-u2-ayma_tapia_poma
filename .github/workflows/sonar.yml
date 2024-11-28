@@ -37,6 +37,7 @@ jobs:
         run: |
           git fetch origin gh-pages  # Fetch de la rama gh-pages
           git checkout gh-pages || git checkout --orphan gh-pages  # Si no existe, crea una nueva rama
+          git pull origin gh-pages  # Hacer pull de los cambios de la rama remota gh-pages
           cp ./project/informes/sonarqube/sonar-report.sarif sonar-report.sarif  # Copiar el reporte SARIF
           git add sonar-report.sarif  # Añadir el archivo SARIF a la rama gh-pages
           git commit -m "Publishing SonarCloud SARIF report" || echo "No changes to commit"  # Si no hay cambios, no hacer commit
