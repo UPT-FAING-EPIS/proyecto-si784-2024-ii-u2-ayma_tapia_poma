@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v3
 
       # Configurar PHP 8.2
-      - name: Set up PHP
+        - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
@@ -27,22 +27,19 @@ jobs:
       # Instalar dependencias (si usas Composer)
       - name: Install dependencies
         run: |
-          cd project # Aquí vas a la carpeta donde está tu proyecto
+          cd project/app # Cambiar a la carpeta del proyecto
           composer install
 
-      # Configurar SonarQube
-      - name: Set up SonarQube
+      # Ejecutar el análisis de SonarCloud
+      - name: Run SonarCloud Analysis
         uses: SonarSource/sonarcloud-github-action@v2
         with:
-          sonar-project-key: 'erickorganizacion_proyectodolist'   # Clave de tu proyecto
-          sonar-project-name: 'My PHP Project'
-          sonar-project-version: '1.0'
-          sonar-host-url: 'https://sonarcloud.io'  # Cambia a tu servidor SonarQube si no usas SonarCloud
-
-      # Ejecutar el análisis de SonarQube
-      - name: Run SonarQube Analysis
-        run: |
-          cd project  # Asegúrate de estar en la carpeta de tu proyecto
-          ./vendor/bin/sonar-scanner
+          args: |
+            -Dsonar.projectKey=erickorganizacion_proyectodolist
+            -Dsonar.organization=erickorganizacion  # Especifica la organización
+            -Dsonar.projectName=My PHP Project
+            -Dsonar.projectVersion=1.0
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.sources=project/app/src  # Ruta donde se encuentran los archivos fuente del proyecto
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Usa el token almacenado en los secretos
