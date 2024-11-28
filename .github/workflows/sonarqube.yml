@@ -1,1 +1,58 @@
-a
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches:
+      - main  # Se ejecutará cuando haya un push a la rama 'main'
+
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest  # Ejecutar en un entorno Ubuntu
+
+    steps:
+    # Paso 1: Descargar el código del repositorio
+    - name: Checkout Repository
+      uses: actions/checkout@v3  # Usar la última versión de actions/checkout
+
+    # Paso 2: Configurar SonarCloud
+    - name: Set up SonarCloud
+      uses: SonarSource/sonarcloud-github-action@v2
+      with:
+        sonar-token: ${{ secrets.SONAR_TOKEN }}
+
+    # Paso 3: Ejecutar el análisis de SonarCloud y generar el reporte SARIF
+    - name: Run SonarCloud Analysis
+      run: |
+        # Ejecutar análisis de SonarCloud con salida SARIF
+        mvn clean verify sonar:sonar -Dsonar.projectKey=erickorganizacion_do-list \
+          -Dsonar.organization=erickorganizacion \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+    # Paso 4: Subir el archivo SARIF a GitHub Code Scanning
+    - name: Upload SARIF result to GitHub Code Scanning
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: sonar-report.sarif  # Subir el archivo SARIF generado
+
+    # Paso 5: Opcional, para mover el reporte SARIF generado a una carpeta 'informes/sonar'
+    - name: Move SARIF report to 'informes/sonar' folder
+      run: |
+        mkdir -p informes/sonar  # Crear la carpeta si no existe
+        mv sonar-report.sarif informes/sonar/  # Mover el archivo SARIF generado a la carpeta
+
+    # Paso 6: Configurar Git para publicar en GitHub Pages
+    - name: Configure Git for GitHub Pages
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+
+    # Paso 7: Publicar el reporte SARIF en la rama gh-pages (si es necesario)
+    - name: Publish SARIF report to GitHub Pages
+      run: |
+        git fetch origin gh-pages  # Fetch la rama gh-pages
+        git checkout gh-pages || git checkout --orphan gh-pages  # Si no existe, crea una nueva rama
+        cp informes/sonar/sonar-report.sarif sonar-report.sarif  # Copiar el reporte SARIF
+        git add sonar-report.sarif  # Añadir el archivo SARIF a la rama gh-pages
+        git commit -m "Publishing SonarCloud SARIF report" || echo "No changes to commit"  # Si no hay cambios, no hacer commit
+        git push origin gh-pages  # Subir los cambios a la rama gh-pages
