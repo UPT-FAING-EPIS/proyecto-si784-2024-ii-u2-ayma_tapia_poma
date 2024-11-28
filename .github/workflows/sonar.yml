@@ -27,7 +27,7 @@ jobs:
       # Instalar dependencias (si usas Composer)
       - name: Install dependencies
         run: |
-          cd project/app # Cambiar a la carpeta del proyecto
+          cd project # Cambiar a la carpeta del proyecto
           composer install
 
       # Ejecutar el análisis de SonarCloud utilizando el archivo 'sonar-project.properties'
