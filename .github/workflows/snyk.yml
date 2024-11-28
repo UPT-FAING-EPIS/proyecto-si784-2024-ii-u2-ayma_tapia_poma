@@ -28,11 +28,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: snyk auth $SNYK_TOKEN
 
-      # Paso 4: Instalar dependencias de Composer (si es un proyecto PHP)
-      - name: Install PHP dependencies
-        run: |
-          cd project  # Cambiar al directorio correcto del proyecto
-          composer install  # Instalar las dependencias definidas en composer.json
+
 
       # Paso 5: Ejecutar el análisis de Snyk para detectar vulnerabilidades en las dependencias dentro de la carpeta 'project'
       - name: Run Snyk Test
