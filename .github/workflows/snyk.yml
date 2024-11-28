@@ -20,7 +20,7 @@ jobs:
 
       # Paso 2: Instalar Snyk CLI
       - name: Install Snyk CLI
-        run: npm install -g snyk snyk-to-html
+        run: npm install -g snyk
 
       # Paso 3: Autenticarse en Snyk (es necesario configurar el token de Snyk como un secreto)
       - name: Authenticate with Snyk
@@ -28,22 +28,11 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: snyk auth $SNYK_TOKEN
 
-
-
-      # Paso 5: Ejecutar el análisis de Snyk para detectar vulnerabilidades en las dependencias dentro de la carpeta 'project'
+      # Paso 4: Ejecutar el análisis de Snyk para detectar vulnerabilidades en las dependencias dentro de la carpeta 'project'
       - name: Run Snyk Test
-        run: snyk test --file=project/composer.lock --json > project/informes/snyk/report.json  # Ejecutar el análisis y guardar el resultado en formato JSON
+        run: snyk test ./project  # Especifica la ruta correcta
 
-      # Paso 6: Exportar los resultados de Snyk en formato SARIF
-      - name: Export Snyk Results in SARIF format
-        run: snyk-to-html -i project/informes/snyk/report.json -o project/informes/snyk/report.sarif  # Convertir JSON a SARIF para GitHub Code Scanning
 
-      # Paso 7: Verificar que el archivo SARIF fue generado correctamente
-      - name: List files in 'project/informes/snyk'
-        run: ls -alh project/informes/snyk  # Verificar si 'report.sarif' está presente
-
-      # Paso 8: Subir el archivo SARIF a GitHub Code Scanning
-      - name: Upload SARIF result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: project/informes/snyk/report.sarif  # Subir el archivo SARIF generado
+      # Paso 6: Subir los resultados de Snyk a tu cuenta en Snyk (opcional)
+      - name: Upload Snyk Results
+        run: snyk monitor ./project  # Especifica la ruta correcta
