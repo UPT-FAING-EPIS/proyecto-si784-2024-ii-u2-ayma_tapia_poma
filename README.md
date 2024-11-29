@@ -3,7 +3,7 @@
 # proyecto-formatos-02
 
 <div align="center">
-## Proyecto "DO-LIST"
+## Desarrollo de un Sistema de Gestión de Tareas y Notificaciones Personalizadas para la Mejora de la Productividad
 
 **INTEGRANTES**  
 **Erick Ayma**  
