@@ -23,20 +23,17 @@ jobs:
         extensions: xdebug # Necesario para la cobertura de código
 
     # Instala MySQL
-    - name: Set up MySQL
-      uses: devcontainers/ci@v0.2
-      with:
-        mysql-version: '8.0'
-
-    # Crea la base de datos
-    - name: Create Database
+    - name: Install MySQL
       run: |
-        mysql -u root -e "CREATE DATABASE test_db;"
+        sudo apt-get update
+        sudo apt-get install -y mysql-server
+        sudo systemctl start mysql
 
-    # Ejecuta el script SQL para poblar la base de datos
-    - name: Run db.sql script
+    # Crea la base de datos y ejecuta el script
+    - name: Create and populate database
       run: |
-        mysql -u root test_db < path/to/your/db.sql
+        mysql -e "CREATE DATABASE IF NOT EXISTS test_db;"  # Crear base de datos
+        mysql test_db < project/db.sql  # Ejecuta el script db.sql
 
     # Instala las dependencias de Composer
     - name: Install dependencies
