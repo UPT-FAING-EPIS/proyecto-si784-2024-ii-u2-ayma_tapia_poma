@@ -1,61 +1,57 @@
-name: Reporte Pruebas UI con playwright
+name: Run Playwright Tests
 
 on:
   push:
     branches:
-      - main  # Ajusta según tu rama principal
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  run-playwright-tests:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest  # Puedes cambiar a windows-latest si necesitas un entorno de Windows
+
+    strategy:
+      matrix:
+        # Definimos una matriz de versiones de Node.js
+        node-version: [18.x]  # Especifica la versión de Node.js que estás utilizando
 
     steps:
-      # Verificar el repositorio
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      # Paso 1: Realizar un "checkout" del código
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # Listar los archivos del repositorio para depuración
-      - name: List repository files (debug)
-        run: ls -R
-
-      # Configurar Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      # Paso 2: Instalar .NET SDK
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v3
         with:
-          node-version: '18'  # Cambia la versión si es necesario
+          dotnet-version: '6.0'  # Cambia esta versión si estás utilizando otra versión de .NET
 
-      # Instalar dependencias de Playwright
-      - name: Install dependencies
-        run: |
-          # Verifica si 'proyecto' existe
-          if [ -d "proyecto" ]; then
-            cd proyecto
-            npm install
-            npx playwright install  # Instala navegadores necesarios para Playwright
-          else
-            echo "Directory 'proyecto' not found!"
-            exit 1
-          fi
+      # Paso 3: Restaurar dependencias de .NET
+      - name: Restore .NET dependencies
+        run: dotnet restore
 
-      # Mover el reporte directamente a Reportes
-      - name: Move Playwright report to Reportes
-        run: |
-          mkdir -p ../Reportes  # Crear la carpeta si no existe
-          mv proyecto/playwright-report ../Reportes/  # Mover el reporte generado
+      # Paso 4: Construir el proyecto .NET
+      - name: Build .NET project
+        run: dotnet build --configuration Release
 
-      # Configurar Git para despliegue
-      - name: Set up Git for deployment
+      # Paso 5: Ejecutar las pruebas con MSTest
+      - name: Run Playwright Tests
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          dotnet test --logger "trx;LogFileName=test-results.trx"
 
-      # Preparar y desplegar a GitHub Pages
-      - name: Deploy Playwright report to GitHub Pages
-        run: |
-          git fetch origin gh-pages || echo "No previous gh-pages branch"
-          git checkout gh-pages || git checkout -b gh-pages
-          git pull origin gh-pages || echo "No changes to pull from gh-pages"
-          cp -r ../Reportes/* .  # Copiar contenido del reporte a la raíz
-          git add .  # Agregar todos los archivos nuevos
-          git commit -m "Deploy Playwright report to gh-pages" || echo "No changes to commit"
-          git push origin gh-pages
+      # Paso 6: Subir resultados de las pruebas
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test-results.trx
+
+      # Paso 7: Subir videos y trazas de Playwright (si se generan)
+      - name: Upload Playwright trace and videos
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-traces
+          path: playwright-traces/
