@@ -28,6 +28,12 @@ jobs:
         cd project
         composer install
 
+    # Da permisos de ejecución a PHPUnit
+    - name: Set execute permissions for PHPUnit
+      run: |
+        cd project
+        chmod +x vendor/bin/phpunit
+
     # Ejecuta PHPUnit y genera el informe HTML de cobertura en la carpeta project
     - name: Run PHPUnit tests
       run: |
