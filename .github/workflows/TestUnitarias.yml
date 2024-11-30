@@ -22,19 +22,19 @@ jobs:
         php-version: '8.2' # PHP 8.2 según tu solicitud
         extensions: xdebug # Necesario para la cobertura de código
 
-    # Instala las dependencias de Composer
+    # Instala las dependencias de Composer en la carpeta project
     - name: Install dependencies
       run: |
         cd project
         composer install
 
-    # Ejecuta PHPUnit y genera el informe HTML de cobertura
+    # Ejecuta PHPUnit y genera el informe HTML de cobertura en la carpeta project
     - name: Run PHPUnit tests
       run: |
         cd project
         vendor/bin/phpunit --coverage-html coverage/html-report
 
-    # Crea la carpeta destino si no existe y mueve el informe
+    # Mueve el informe generado a la carpeta destino
     - name: Move coverage report to the target folder
       run: |
         cd project
