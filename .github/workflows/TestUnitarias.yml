@@ -22,30 +22,37 @@ jobs:
         php-version: '8.2' # PHP 8.2 según tu solicitud
         extensions: xdebug # Necesario para la cobertura de código
 
-    # Instala las dependencias de Composer en la carpeta project
+    # Instala MySQL
+    - name: Set up MySQL
+      uses: devcontainers/ci@v0.2
+      with:
+        mysql-version: '8.0'
+
+    # Crea la base de datos
+    - name: Create Database
+      run: |
+        mysql -u root -e "CREATE DATABASE test_db;"
+
+    # Ejecuta el script SQL para poblar la base de datos
+    - name: Run db.sql script
+      run: |
+        mysql -u root test_db < path/to/your/db.sql
+
+    # Instala las dependencias de Composer
     - name: Install dependencies
       run: |
         cd project
         composer install
 
-    # Da permisos de ejecución a PHPUnit
-    - name: Set execute permissions for PHPUnit
-      run: |
-        cd project
-        chmod +x vendor/bin/phpunit
-
-    # Ejecuta PHPUnit y genera el informe HTML de cobertura en la carpeta project
+    # Ejecuta PHPUnit y genera el informe HTML de cobertura
     - name: Run PHPUnit tests
-      run: |
-        cd project
-        vendor/bin/phpunit --coverage-html coverage/html-report
+      run: vendor/bin/phpunit --coverage-html coverage/html-report
 
-    # Mueve el informe generado a la carpeta destino
+    # Crea la carpeta destino si no existe y mueve el informe
     - name: Move coverage report to the target folder
       run: |
-        cd project
-        mkdir -p ../proyecto-si784-2024-ii-u2-ayma_tapia_poma/project/informes/pruebasunitarias
-        cp -r coverage/html-report/* ../proyecto-si784-2024-ii-u2-ayma_tapia_poma/project/informes/pruebasunitarias/
+        mkdir -p proyecto-si784-2024-ii-u2-ayma_tapia_poma/project/informes/pruebasunitarias
+        cp -r coverage/html-report/* proyecto-si784-2024-ii-u2-ayma_tapia_poma/project/informes/pruebasunitarias/
     
     # (Opcional) Sube el informe como artefacto para descargarlo desde GitHub
     - name: Upload coverage report as artifact
