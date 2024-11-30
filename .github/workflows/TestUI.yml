@@ -14,8 +14,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Listar archivos del repositorio para depuración (verificar que 'proyecto' exista)
-      - name: List repository files
+      # Listar los archivos del repositorio para depuración
+      - name: List repository files (debug)
         run: ls -R
 
       # Configurar Node.js
@@ -27,6 +27,7 @@ jobs:
       # Instalar dependencias de Playwright
       - name: Install dependencies
         run: |
+          # Verifica si 'proyecto' existe
           if [ -d "proyecto" ]; then
             cd proyecto
             npm install
