@@ -29,21 +29,21 @@ jobs:
         sudo apt install -y mysql-server
         sudo service mysql start
 
-    # Establece una contraseña para el usuario root de MySQL
-    - name: Set MySQL root password
+    # Deshabilita la contraseña del usuario root (para evitar el acceso denegado)
+    - name: Disable MySQL root password temporarily
       run: |
-        sudo mysql -e "UPDATE mysql.user SET authentication_string=PASSWORD('root_password') WHERE User='root';"
+        sudo mysql -e "UPDATE mysql.user SET authentication_string = NULL WHERE User = 'root';"
         sudo mysql -e "FLUSH PRIVILEGES;"
 
     # Crea la base de datos para pruebas
     - name: Create Test Database
       run: |
-        mysql -u root -proot_password -e "CREATE DATABASE IF NOT EXISTS test_db;"
+        mysql -u root -e "CREATE DATABASE IF NOT EXISTS test_db;"
 
     # Ejecuta el script db.sql
     - name: Run db.sql script
       run: |
-        mysql -u root -proot_password test_db < path/to/your/db.sql
+        mysql -u root test_db < path/to/your/db.sql
 
     # Instala las dependencias de Composer
     - name: Install dependencies
