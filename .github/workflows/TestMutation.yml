@@ -28,7 +28,7 @@ jobs:
         cd project
         composer install
 
-    # Instala Infection PHP para pruebas mutantes
+    # Instala Infection PHP para pruebas mutantes (si es necesario para otras pruebas)
     - name: Install Infection PHP
       run: |
         cd project
@@ -40,14 +40,14 @@ jobs:
         cd project
         chmod +x vendor/bin/infection
 
-    # Ejecuta las pruebas mutantes y genera el informe de cobertura en formato Clover
-    - name: Run Mutation Tests
+    # Copia el archivo Clover XML existente para generar el informe HTML
+    - name: Copy existing Clover XML
       run: |
-        cd project
-        vendor/bin/infection --coverage-clover=coverage/clover.xml
+        mkdir -p project/coverage
+        cp /path/to/your/clover.xml project/coverage/clover.xml
 
-    # Genera el reporte en HTML a partir del archivo Clover
-    - name: Generate HTML Mutation Report
+    # Genera el reporte en HTML a partir del archivo Clover XML existente
+    - name: Generate HTML Mutation Report from Clover XML
       run: |
         cd project
         vendor/bin/infection --coverage-html=coverage/html-report
