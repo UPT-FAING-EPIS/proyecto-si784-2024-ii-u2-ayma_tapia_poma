@@ -24,7 +24,9 @@ jobs:
 
     # Instala las dependencias de Composer
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: |
+        cd project
+        composer install
 
     # Ejecuta PHPUnit y genera el informe HTML de cobertura
     - name: Run PHPUnit tests
