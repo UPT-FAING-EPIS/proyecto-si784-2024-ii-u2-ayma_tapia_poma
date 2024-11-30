@@ -22,28 +22,26 @@ jobs:
         php-version: '8.2' # PHP 8.2 según tu solicitud
         extensions: xdebug # Necesario para la cobertura de código
 
-    # Instala MySQL
-    - name: Install MySQL
+    # Instala MySQL y configura el usuario root con una contraseña
+    - name: Install and configure MySQL
       run: |
         sudo apt update
         sudo apt install -y mysql-server
         sudo service mysql start
-
-    # Deshabilita la contraseña del usuario root (para evitar el acceso denegado)
-    - name: Disable MySQL root password temporarily
-      run: |
-        sudo mysql -e "UPDATE mysql.user SET authentication_string = NULL WHERE User = 'root';"
+        
+        # Configurar el root con contraseña 'root_password'
+        sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root_password';"
         sudo mysql -e "FLUSH PRIVILEGES;"
 
     # Crea la base de datos para pruebas
     - name: Create Test Database
       run: |
-        mysql -u root -e "CREATE DATABASE IF NOT EXISTS test_db;"
+        mysql -u root -p'root_password' -e "CREATE DATABASE IF NOT EXISTS test_db;"
 
     # Ejecuta el script db.sql
     - name: Run db.sql script
       run: |
-        mysql -u root test_db < path/to/your/db.sql
+        mysql -u root -p'root_password' test_db < path/to/your/db.sql
 
     # Instala las dependencias de Composer
     - name: Install dependencies
