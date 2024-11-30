@@ -14,6 +14,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Listar archivos del repositorio para depuración (verificar que 'proyecto' exista)
+      - name: List repository files
+        run: ls -R
+
       # Configurar Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -23,9 +27,14 @@ jobs:
       # Instalar dependencias de Playwright
       - name: Install dependencies
         run: |
-          cd proyecto
-          npm install
-          npx playwright install  # Instala navegadores necesarios para Playwright
+          if [ -d "proyecto" ]; then
+            cd proyecto
+            npm install
+            npx playwright install  # Instala navegadores necesarios para Playwright
+          else
+            echo "Directory 'proyecto' not found!"
+            exit 1
+          fi
 
       # Mover el reporte directamente a Reportes
       - name: Move Playwright report to Reportes
@@ -33,6 +42,7 @@ jobs:
           mkdir -p ../Reportes  # Crear la carpeta si no existe
           mv proyecto/playwright-report ../Reportes/  # Mover el reporte generado
 
+      # Configurar Git para despliegue
       - name: Set up Git for deployment
         run: |
           git config --global user.name "GitHub Actions"
