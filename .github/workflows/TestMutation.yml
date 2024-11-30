@@ -40,11 +40,11 @@ jobs:
         cd project
         chmod +x vendor/bin/infection
 
-    # Ejecuta las pruebas mutantes y genera el informe de cobertura en formato Clover
+    # Ejecuta las pruebas mutantes y genera el informe de cobertura en Clover (formato correcto)
     - name: Run Mutation Tests
       run: |
         cd project
-        vendor/bin/infection --coverage-clover=coverage/clover.xml
+        vendor/bin/infection --coverage=coverage/clover.xml
 
     # Genera el reporte en HTML a partir del archivo Clover
     - name: Generate HTML Mutation Report
