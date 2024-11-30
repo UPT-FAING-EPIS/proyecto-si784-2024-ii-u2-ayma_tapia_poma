@@ -25,15 +25,25 @@ jobs:
     # Instala MySQL
     - name: Install MySQL
       run: |
-        sudo apt-get update
-        sudo apt-get install -y mysql-server
-        sudo systemctl start mysql
+        sudo apt update
+        sudo apt install -y mysql-server
+        sudo service mysql start
 
-    # Crea la base de datos y ejecuta el script
-    - name: Create and populate database
+    # Establece una contraseña para el usuario root de MySQL
+    - name: Set MySQL root password
       run: |
-        mysql -e "CREATE DATABASE IF NOT EXISTS test_db;"  # Crear base de datos
-        mysql test_db < project/db.sql  # Ejecuta el script db.sql
+        sudo mysql -e "UPDATE mysql.user SET authentication_string=PASSWORD('root_password') WHERE User='root';"
+        sudo mysql -e "FLUSH PRIVILEGES;"
+
+    # Crea la base de datos para pruebas
+    - name: Create Test Database
+      run: |
+        mysql -u root -proot_password -e "CREATE DATABASE IF NOT EXISTS test_db;"
+
+    # Ejecuta el script db.sql
+    - name: Run db.sql script
+      run: |
+        mysql -u root -proot_password test_db < path/to/your/db.sql
 
     # Instala las dependencias de Composer
     - name: Install dependencies
