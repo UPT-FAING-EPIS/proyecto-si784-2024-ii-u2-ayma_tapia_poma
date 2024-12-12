@@ -34,21 +34,15 @@ jobs:
         cd project
         chmod +x vendor/bin/phpunit
 
-    # Ejecuta PHPUnit y genera el informe HTML de cobertura
+    # Ejecuta PHPUnit y genera el informe HTML de cobertura directamente en la carpeta especificada
     - name: Run PHPUnit tests
       run: |
         cd project
-        php vendor/bin/phpunit --coverage-html coverage/html-report
-
-    # Crea la carpeta destino si no existe y mueve el informe
-    - name: Move coverage report to the target folder
-      run: |
-        mkdir -p proyecto-si784-2024-ii-u2-ayma_tapia_poma/project/informes/pruebasunitarias
-        cp -r project/coverage/html-report/* proyecto-si784-2024-ii-u2-ayma_tapia_poma/project/informes/pruebasunitarias/
+        php vendor/bin/phpunit --coverage-html informes/pruebasunitarias
 
     # (Opcional) Sube el informe como artefacto para descargarlo desde GitHub
     - name: Upload coverage report as artifact
       uses: actions/upload-artifact@v3
       with:
         name: phpunit-coverage-report
-        path: proyecto-si784-2024-ii-u2-ayma_tapia_poma/project/informes/pruebasunitarias/
+        path: project/informes/pruebasunitarias/
