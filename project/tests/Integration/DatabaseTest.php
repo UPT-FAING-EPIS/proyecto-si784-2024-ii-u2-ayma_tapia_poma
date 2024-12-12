@@ -15,10 +15,10 @@ class DatabaseTest extends TestCase
     public function testDatabaseConnectionWithValidConfig()
     {
         $mockConfig = [
-            'host' => 'localhost',
+            'host' => '161.132.50.160',
             'db' => 'test_db',
-            'user' => 'root',
-            'pass' => '',
+            'user' => 'raymond',
+            'pass' => 'Upt2024',
         ];
 
         $database = new class($mockConfig) extends \App\Models\Database {
@@ -65,10 +65,10 @@ class DatabaseTest extends TestCase
     public function testPdoErrorModeIsSetCorrectly()
     {
         $mockConfig = [
-            'host' => 'localhost',
+            'host' => '161.132.50.160',
             'db' => 'test_db',
-            'user' => 'root',
-            'pass' => '',
+            'user' => 'raymond',
+            'pass' => 'Upt2024',
         ];
 
         $database = new class($mockConfig) extends \App\Models\Database {
@@ -92,10 +92,10 @@ class DatabaseTest extends TestCase
     public function testPdoAttributesAreSetCorrectly()
     {
         $mockConfig = [
-            'host' => 'localhost',
+            'host' => '161.132.50.160',
             'db' => 'test_db',
-            'user' => 'root',
-            'pass' => '',
+            'user' => 'raymond',
+            'pass' => 'Upt2024',
         ];
 
         $database = new class($mockConfig) extends \App\Models\Database {
