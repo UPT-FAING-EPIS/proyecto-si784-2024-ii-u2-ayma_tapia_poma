@@ -34,10 +34,11 @@ jobs:
         cd project
         chmod +x vendor/bin/phpunit
 
+    # Ejecuta PHPUnit y genera el informe HTML de cobertura
     - name: Run PHPUnit tests
       run: |
         cd project
-        php vendor/bin/phpunit --no-configuration --coverage-html coverage/html-report
+        php vendor/bin/phpunit --coverage-html coverage/html-report
 
     # Crea la carpeta destino si no existe y mueve el informe
     - name: Move coverage report to the target folder
