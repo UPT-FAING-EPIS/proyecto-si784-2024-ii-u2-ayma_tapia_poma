@@ -22,43 +22,33 @@ jobs:
         php-version: '8.2' # PHP 8.2 según tu solicitud
         extensions: xdebug # Necesario para la cobertura de código
 
-    # Instala MySQL y configura el usuario root con una contraseña
-    - name: Install and configure MySQL
-      run: |
-        sudo apt update
-        sudo apt install -y mysql-server
-        sudo service mysql start
-        
-        # Configurar el root con contraseña 'root_password'
-        sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root_password';"
-        sudo mysql -e "FLUSH PRIVILEGES;"
-
-    # Crea la base de datos para pruebas
-    - name: Create Test Database
-      run: |
-        mysql -u root -p'root_password' -e "CREATE DATABASE IF NOT EXISTS test_db;"
-
-    # Ejecuta el script db.sql
-    - name: Run db.sql script
-      run: |
-        mysql -u root -p'root_password' test_db < path/to/your/db.sql
-
     # Instala las dependencias de Composer
     - name: Install dependencies
       run: |
         cd project
         composer install
 
+    # Configura variables de entorno para conexión a la base de datos en la nube
+    - name: Set environment variables
+      env:
+        DB_HOST: your-cloud-db-host
+        DB_DATABASE: your-database-name
+        DB_USERNAME: your-username
+        DB_PASSWORD: your-password
+      run: echo "Environment variables set."
+
     # Ejecuta PHPUnit y genera el informe HTML de cobertura
     - name: Run PHPUnit tests
-      run: vendor/bin/phpunit --coverage-html coverage/html-report
+      run: |
+        cd project
+        vendor/bin/phpunit --coverage-html coverage/html-report
 
     # Crea la carpeta destino si no existe y mueve el informe
     - name: Move coverage report to the target folder
       run: |
         mkdir -p proyecto-si784-2024-ii-u2-ayma_tapia_poma/project/informes/pruebasunitarias
-        cp -r coverage/html-report/* proyecto-si784-2024-ii-u2-ayma_tapia_poma/project/informes/pruebasunitarias/
-    
+        cp -r project/coverage/html-report/* proyecto-si784-2024-ii-u2-ayma_tapia_poma/project/informes/pruebasunitarias/
+
     # (Opcional) Sube el informe como artefacto para descargarlo desde GitHub
     - name: Upload coverage report as artifact
       uses: actions/upload-artifact@v3
