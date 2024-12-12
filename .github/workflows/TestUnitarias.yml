@@ -28,20 +28,17 @@ jobs:
         cd project
         composer install
 
-    # Configura variables de entorno para conexión a la base de datos en la nube
-    - name: Set environment variables
-      env:
-        DB_HOST: your-cloud-db-host
-        DB_DATABASE: your-database-name
-        DB_USERNAME: your-username
-        DB_PASSWORD: your-password
-      run: echo "Environment variables set."
+    # Corrige permisos para vendor/bin/phpunit
+    - name: Fix permissions for PHPUnit
+      run: |
+        cd project
+        chmod +x vendor/bin/phpunit
 
     # Ejecuta PHPUnit y genera el informe HTML de cobertura
     - name: Run PHPUnit tests
       run: |
         cd project
-        vendor/bin/phpunit --coverage-html coverage/html-report
+        php vendor/bin/phpunit --coverage-html coverage/html-report
 
     # Crea la carpeta destino si no existe y mueve el informe
     - name: Move coverage report to the target folder
