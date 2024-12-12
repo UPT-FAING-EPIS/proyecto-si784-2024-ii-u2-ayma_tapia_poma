@@ -155,7 +155,32 @@ class DatabaseTest extends TestCase
             }
         };
     }
+    /**
+     * Verifica que se lance una excepción al intentar establecer conexión con credenciales inválidas.
+     */
+    public function testDatabaseConnectionWithInvalidCredentials()
+    {
+        $this->expectException(PDOException::class);
+        $this->expectExceptionMessage("Access denied");
 
+        new class extends \App\Models\Database {
+            public function __construct()
+            {
+                $mockConfig = [
+                    'host' => '161.132.50.160',
+                    'db' => 'test_db',
+                    'user' => 'invalid_user',
+                    'pass' => 'invalid_pass',
+                ];
+
+                $this->conn = new \PDO(
+                    "mysql:host={$mockConfig['host']};dbname={$mockConfig['db']}",
+                    $mockConfig['user'],
+                    $mockConfig['pass']
+                );
+            }
+        };
+    }
     /**
      * Verifica que se lance una excepción para configuraciones inválidas repetidas.
      */
