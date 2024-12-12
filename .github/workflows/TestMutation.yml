@@ -40,14 +40,19 @@ jobs:
         cd project
         chmod +x vendor/bin/infection
 
-    # Ejecuta las pruebas mutantes y genera el informe de cobertura en formato Clover
-    # Eliminamos el parámetro de validación para continuar sin errores
+    # Ejecuta PHPUnit para generar la cobertura de código en formato Clover
+    - name: Run PHPUnit tests with coverage
+      run: |
+        cd project
+        php vendor/bin/phpunit --coverage-clover=coverage/clover.xml
+
+    # Ejecuta las pruebas mutantes con el archivo de cobertura generado
     - name: Run Mutation Tests
       run: |
         cd project
         vendor/bin/infection --coverage=coverage/clover.xml --no-progress
 
-    # Genera el reporte en HTML a partir del archivo Clover
+    # Genera el reporte HTML de las pruebas mutantes
     - name: Generate HTML Mutation Report
       run: |
         cd project
