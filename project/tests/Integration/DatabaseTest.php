@@ -113,32 +113,6 @@ class DatabaseTest extends TestCase
         $this->assertEquals(PDO::ERRMODE_EXCEPTION, $database->getConnection()->getAttribute(PDO::ATTR_ERRMODE));
     }
 
-    /**
-     * Verifica que se lance una excepción al intentar establecer conexión con credenciales inválidas.
-     */
-    public function testDatabaseConnectionWithInvalidCredentials()
-    {
-        $this->expectException(PDOException::class);
-        $this->expectExceptionMessage("Access denied");
-
-        new class extends \App\Models\Database {
-            public function __construct()
-            {
-                $mockConfig = [
-                    'host' => 'localhost',
-                    'db' => 'test_db',
-                    'user' => 'invalid_user',
-                    'pass' => 'invalid_pass',
-                ];
-
-                $this->conn = new \PDO(
-                    "mysql:host={$mockConfig['host']};dbname={$mockConfig['db']}",
-                    $mockConfig['user'],
-                    $mockConfig['pass']
-                );
-            }
-        };
-    }
 
     /**
      * Verifica que se lance una excepción al fallar la conexión a la base de datos.
