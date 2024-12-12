@@ -34,11 +34,22 @@ jobs:
         cd project
         chmod +x vendor/bin/phpunit
 
+    # Crea la carpeta destino antes de ejecutar los tests
+    - name: Create target directory for coverage report
+      run: |
+        mkdir -p project/informes/pruebasunitarias
+
     # Ejecuta PHPUnit y genera el informe HTML de cobertura directamente en la carpeta especificada
     - name: Run PHPUnit tests
       run: |
         cd project
-        php vendor/bin/phpunit --coverage-html informes/pruebasunitarias
+        php vendor/bin/phpunit --coverage-html project/informes/pruebasunitarias
+
+    # Verifica que el informe se haya generado
+    - name: List files after PHPUnit
+      run: |
+        cd project
+        ls -R project/informes/pruebasunitarias
 
     # (Opcional) Sube el informe como artefacto para descargarlo desde GitHub
     - name: Upload coverage report as artifact
